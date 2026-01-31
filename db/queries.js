@@ -1,9 +1,17 @@
 const pool = require("./pool");
 
+
 async function createUser(firstName, lastName, email, password){
     const {rows} = await pool.query(
         "INSERT INTO users (firstName, lastName, email, password) VALUES ($1, $2, $3, $4)",
         [firstName, lastName, email, password]
+    );
+    return rows;
+}
+
+async function getUserById(id){
+    const {rows} = await pool.query(
+        "SELECT * FROM user WHERE id=$1",[id]
     );
     return rows;
 }
@@ -42,6 +50,7 @@ async function updateAdminStatus(id){
 
 module.exports= {
     createUser,
+    getUserById,
     getUserByUserName,
     getAllMessages,
     createMessage,
