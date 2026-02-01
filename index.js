@@ -8,6 +8,7 @@ const pgPool = require("./db/pool");
 const db = require("./db/queries");
 const pgSession = require("connect-pg-simple")(session);
 const bcrypt = require("bcryptjs");
+const route = require("./routes/route");
 
 const app = express();
 app.set("views", path.join(__dirname, "views"));
@@ -62,7 +63,7 @@ app.use(
 );
 app.use(passport.session());
 
-app.get("/", route);
+app.use("/", route);
 
 const PORT = process.env.PORT || 3000;
 
