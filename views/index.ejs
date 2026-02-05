@@ -8,5 +8,15 @@
 <body>
     <%- include('./partials/navbar.ejs') %>
     <h1>Members Only</h1>
+    <div class="message-container">
+        <% messageInfo.forEach(message=>{ %>
+            <div class="message-info">
+                <h3> Title: <%= message.title %></h3>
+                <p>description: <%= message.description %></p>
+                <p>Date: <%= message.date %></p>
+                <p>Author: <%= message.author %></p>
+            </div>
+        <% }); %>
+    </div>
 </body>
 </html>

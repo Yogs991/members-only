@@ -6,6 +6,7 @@ const SQL = `
         firstName VARCHAR(100),
         lastName VARCHAR(100),
         email VARCHAR(100),
+        username VARCHAR(100),
         password VARCHAR(100),
         member BOOLEAN DEFAULT FALSE,
         admin BOOLEAN DEFAULT false
@@ -14,10 +15,22 @@ const SQL = `
     CREATE TABLE IF NOT EXISTS messages(
         id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
         title VARCHAR(100),
-        message TEXT,
+        description TEXT,
         added DATE,
         authorId INTEGER REFERENCES users(id)
     );
+
+    INSERT INTO messages(title, description, added, authorid) VALUES ($1,$2,$3,$4)
+        ('My first message'),
+        ('hello everyone, this is my first message here.'),
+        (NOW()),
+        (1);
+    
+    INSERT INTO messages(title, description, added, authorid) VALUES ($1,$2,$3,$4)
+    ('My second message'),
+        ('good morning everyone, how was your day?.'),
+        (NOW()),
+        (1);
 `;
 
 async function main(){
