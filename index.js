@@ -63,6 +63,12 @@ app.use(
 );
 app.use(passport.session());
 
+// app.use((req, res, next)=>{
+//     console.log(req.session);
+//     console.log(req.user);
+//     next();
+// })
+
 app.use("/", route);
 
 const PORT = process.env.PORT || 3000;

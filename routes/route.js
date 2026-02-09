@@ -3,14 +3,17 @@ const { Router } = require("express");
 const router = Router();
 const controller = require("../controllers/controller");
 const passport = require("passport");
+const {requireMember, requireAdmin} = require("../authentication");
 
-router.get("/", controller.showMessages);
+router.get("/", controller.getMessages);
 
 router.get("/sign-up", controller.getSignUpPage);
 router.get("/log-in", controller.getLoginPage);
 router.get("/new-message",controller.getNewMessagePage);
+router.get("/admin-page", requireAdmin, controller.getAdminPage);
+router.get("/member-page", requireMember ,controller.getMemberPage);
 
-router.post("/sign-up", controller.saveSignUpUser);
+router.post("/sign-up", controller.saveUserToDb);
 router.post("/log-in", 
     passport.authenticate("local",{
         successRedirect: "/",
@@ -25,7 +28,11 @@ router.post("/log-out", (req, res, next)=>{
         }
         res.redirect("/");
     })
-})
+});
+
 router.post("/new-message", controller.saveMessageToDb);
+router.post("/admin-page", controller.setAdmin);
+router.post("/member-page", controller.setMember);
+router.post("/delete-message/:id", controller.deleteMessage);
 
 module.exports = router;

@@ -1,3 +1,4 @@
+require("dotenv").config();
 const db = require("../db/queries");
 const bcrypt = require("bcryptjs");
 
@@ -13,7 +14,7 @@ async function getNewMessagePage(req,res){
     res.render("new-message", {user: req.user});
 }
 
-async function saveSignUpUser(req,res) {
+async function saveUserToDb(req,res) {
     const {firstName, lastName, username, email} = req.body;
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     try {
@@ -47,24 +48,82 @@ async function getUserFromDb(req,res){
     }
 }
 
-async function showMessages(req, res){
+async function getMessages(req, res){
     const messages = await db.getAllMessages();
+
+    const isMember = req.isAuthenticated() && req.user.member === true;
+
+    const isAdmin = req.isAuthenticated() && req.user.admin === true;
+    
     const messageInfo = messages.map(message=>({
+        id: message.id,
         title: message.title,
         description: message.description,
-        date: message.added,
-        author: message.author
+        date: new Date(message.added).toLocaleDateString('en-US',{year: 'numeric', month: 'long', day:'numeric'}),
+        author: message.author || 'Unknown'
     }));
 
-    res.render("index", {messageInfo, user:req.user});
+    res.render("index", {messageInfo, user:req.user, isMember: isMember, isAdmin: isAdmin});
+}
+
+async function getMemberPage(req,res){
+    res.render("member");
+}
+
+async function getAdminPage(req,res){
+    res.render("admin");
+}
+
+async function setMember(req,res){
+    try {
+        if(req.body.member === process.env.MEMBER_PASSCODE){
+            await db.updateMemberStatus(req.user.id);
+            console.log("You are a member");
+        }else{
+            console.log("Incorrect passcode");            
+        }
+        res.redirect("/");    
+    } catch (error) {
+        console.log(error);        
+    }
+}
+
+async function setAdmin(req,res){
+    try {
+        if(req.body.admin === process.env.ADMIN_PASSCODE){
+            await db.updateAdminStatus(req.user.id);
+            console.log("You are an admin");
+        }else{
+            console.log("Incorrect passcode");            
+        }
+        res.redirect("/");
+    } catch (error) {
+        console.log(error);        
+    }
+}
+
+async function deleteMessage(req, res){
+    try {
+        const messageId = parseInt(req.params.id,10);
+        const result = await db.deleteMessage(messageId);
+        res.redirect("/");
+    } catch (error) {
+        console.error("Error deleting message:", error);
+        res.status(500).send("Error deleting message");        
+    }
 }
 
 module.exports={
     getSignUpPage,
     getLoginPage,
     getNewMessagePage,
-    saveSignUpUser,
+    saveUserToDb,
     saveMessageToDb,
     getUserFromDb,
-    showMessages
+    getMessages,
+    getMemberPage,
+    getAdminPage,
+    setMember,
+    setAdmin,
+    deleteMessage
 }

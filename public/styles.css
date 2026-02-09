@@ -1,0 +1,40 @@
+*{
+    margin: 0;
+    padding: 0;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
+}
+
+body{
+    color: #F0EDEE;
+    background: #2C666E;
+    padding: 5px;
+}
+
+.main-section{
+    text-align: center;
+}
+
+.message-container{
+    max-width: 1700px;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-self: center;
+    align-self: center;
+    border-radius: 5px;
+    border: 1px solid black;
+    box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+a{
+    text-decoration: none;
+    color: #F0EDEE;
+}
+
+nav{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-left: 10px;
+    padding-right: 10px;
+}
