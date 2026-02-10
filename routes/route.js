@@ -4,6 +4,7 @@ const router = Router();
 const controller = require("../controllers/controller");
 const passport = require("passport");
 const {requireMember, requireAdmin} = require("../authentication");
+const validation = require("../validator");
 
 router.get("/", controller.getMessages);
 
@@ -13,8 +14,8 @@ router.get("/new-message",controller.getNewMessagePage);
 router.get("/admin-page", requireAdmin, controller.getAdminPage);
 router.get("/member-page", requireMember ,controller.getMemberPage);
 
-router.post("/sign-up", controller.saveUserToDb);
-router.post("/log-in", 
+router.post("/sign-up", validation.validateSignUp, controller.saveUserToDb);
+router.post("/log-in", validation.validateLogin,
     passport.authenticate("local",{
         successRedirect: "/",
         failureRedirect: "/log-in"
